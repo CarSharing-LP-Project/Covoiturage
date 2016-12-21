@@ -1,31 +1,31 @@
 package Pack_Appli;
 
 //VERSION 6.3
-//DerniÃ¨re modification le mardi 29 novembre 2016 Ã  14:26 par Romain HAGEMANN
+//Dernière modification le mardi 29 novembre 2016 à 14:26 par Romain HAGEMANN
 //Contact : etienne.callies@polytechnique.org
 //Encodage ISO-8859-1, Java 1.6 ou 1.7
 //CarSharing : n voitures, m clients, une destination et une voiture par client, covoiturage dynamique
 //Dans une ville type Manhattan avec embouteillages
-//Algorithme : mÃ©thode dÃ©terministe ou mÃ©thode du recuit simulÃ©
-//Fonction de cout rÃ©aliste paramÃ©trable
-//PossibilitÃ© de rajouter des clients de maniÃ¨re alÃ©atoire et continue
-//PossibilitÃ© de rÃ©gler la probabilitÃ© qu'un usager prÃ©fÃ¨re sa voiture au systÃ¨me de covoiturage
-//PossibilitÃ© de voir en temps rÃ©el les diffÃ©rentes donnÃ©es de simulation
+//Algorithme : méthode déterministe ou méthode du recuit simulé
+//Fonction de cout réaliste paramétrable
+//Possibilité de rajouter des clients de maniêre aléatoire et continue
+//Possibilité de régler la probabilité qu'un usager préfére sa voiture au systême de covoiturage
+//Possibilité de voir en temps rêel les différentes données de simulation
 
 
-//Variables Ã  privilÃ©gier :
-//i : abscisse en nombre de carrÃ©s
-//j : ordonnÃ©e en nombre de carrÃ©s
-//k : numÃ©ro de Car sÃ©lectionnÃ©e
-//l : numÃ©ro du Client sÃ©lectionnÃ©
+//Variables à privilégier :
+//i : abscisse en nombre de carrés
+//j : ordonnée en nombre de carrés
+//k : numéro de Car sélectionnée
+//l : numéro du Client sélectionné
 //m : une matrice
-//n : numÃ©ro de la simulation enregistrÃ©e sÃ©lectionnÃ©e
+//n : numéro de la simulation enregistrée sélectionnée
 //p : un Point
-//q : une ordonnÃ©e d'une matrice de passage, varie de 0 Ã  2*clientAlgoNumber-1,
+//q : une ordonnée d'une matrice de passage, varie de 0 Ã  2*clientAlgoNumber-1,
 //     pair pour les positions, impair pour les target
 //t : un tableau
 //x : abscisse en nombre de pixels
-//y : ordonnÃ©e en nombre de pixels
+//y : ordonnée en nombre de pixels
 //z : index d'un tableau quelconque
 //Le reste en anglais en respectant la casse helloWorld
 

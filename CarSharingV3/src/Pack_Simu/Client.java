@@ -1,7 +1,7 @@
 package Pack_Simu;
 
 
-//La classe client reprÃ©sente un voyageur
+//La classe client représente un voyageur
 public class Client
 {
 	private int id;
@@ -14,7 +14,7 @@ public class Client
 	//state :
 	//0 sur le trottoir
 	//1 dans la voiture
-	//2 arrivÃ©
+	//2 arrivé
 	private Car car;
 	private boolean isUsingCarSharing;
 

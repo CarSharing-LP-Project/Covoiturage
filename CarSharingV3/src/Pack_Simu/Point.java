@@ -1,6 +1,6 @@
 package Pack_Simu;
 
-//Cette classe reprÃ©sente un doublet d'entier
+//Cette classe représente un doublet d'entier
 public class Point
 {   
 	private int x;

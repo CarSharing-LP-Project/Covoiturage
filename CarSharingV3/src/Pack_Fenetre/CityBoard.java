@@ -12,7 +12,7 @@ import Pack_Simu.Car;
 import Pack_Simu.Client;
 
 
-//CityBoard est l'Ã©lÃ©ment central reprÃ©sentant la ville
+//CityBoard est l'élément central représentant la ville
 public class CityBoard extends JPanel
 {
 	private static final long serialVersionUID = -4239432318493357189L;
@@ -22,23 +22,23 @@ public class CityBoard extends JPanel
 	private final int boardHeight = 25;
 	private final int squareSize = 20;
 	
-	//on enregistre dans ce champ l'adresse de l'application pour accÃ©der aux variables de simulation
+	//on enregistre dans ce champ l'adresse de l'application pour accéder aux variables de simulation
 	Application app;
 	
 	CityBoard(Application consApp){
 		Dimension boardDimension = new Dimension(getBoardWidth() * getSquareSize(),getBoardHeight() * getSquareSize());
-		//La taille du Panel est fixÃ©e Ã  sa dimension initiale
+		//La taille du Panel est fixée à  sa dimension initiale
 		setMinimumSize(boardDimension);
 		setMaximumSize(boardDimension);
 		setPreferredSize(boardDimension);
-		//Les Ã©vÃ©nements souris seront traitÃ©s par la classe ci-dessous
+		//Les événements souris seront traités par la classe ci-dessous
 		addMouseListener(consApp);
 		app = consApp;
 	}
 	
 	
 	/** DESSIN **/
-	//dessine le cityboard, appelÃ© par la fonction repaint()
+	//dessine le cityboard, appelé par la fonction repaint()
 	public void paintComponent(Graphics g)
 	{
 		g.setColor(Color.WHITE);
@@ -102,7 +102,7 @@ public class CityBoard extends JPanel
 		drawId(g,cli.getId(),x,y);
 	}
 	
-	//Dessine le numÃ©ro de la voiture ou du client
+	//Dessine le numéro de la voiture ou du client
 	void drawId(Graphics g, int id, int x, int y){
 		g.setColor(Color.BLACK);
 		g.drawString(""+id,x + getSquareSize()/3, y + getSquareSize());

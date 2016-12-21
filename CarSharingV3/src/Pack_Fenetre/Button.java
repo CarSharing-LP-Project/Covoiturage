@@ -13,11 +13,11 @@ class Button extends JButton{
 	Button(String buttonName,Application app,boolean isEnable){
 		//Texte sur le bouton
 		setText(buttonName);
-		//ActivÃ© ou non
+		//Activé ou non
 		setEnabled(isEnable);
-		//On permet aux boutons de s'Ã©tirer autant que possible
+		//On permet aux boutons de s'étirer autant que possible
 		setMaximumSize(new Dimension(Short.MAX_VALUE,Short.MAX_VALUE));
-		//classe ou sera envoyÃ© le signal
+		//classe ou sera envoyé le signal
 		addActionListener(app);
 	}
 }

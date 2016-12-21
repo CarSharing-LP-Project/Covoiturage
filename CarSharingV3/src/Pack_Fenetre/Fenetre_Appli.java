@@ -24,7 +24,7 @@ import Pack_Appli.Saving;
 
 public class Fenetre_Appli extends JFrame{
 	private static final long serialVersionUID = -3022785407645996324L;
-	//On dÃ©clare les variables pour pouvoir rÃ©cupÃ©rer leur valeur et les modifier
+	//On déclare les variables pour pouvoir récupèrer leur valeur et les modifier
 	private CityBoard board;
 	private JButton startButton;
 	private JButton clearButton;
@@ -48,14 +48,14 @@ public class Fenetre_Appli extends JFrame{
 	
 	private RadioButton[] algorithmeArray;
 	ButtonGroup algorithme;
-	//Cette fonction permet de rÃ©cupÃ©rer le numÃ©ro de l'algorithme sÃ©lectionÃ©
+	//Cette fonction permet de récupèrer le numéro de l'algorithme sélectioné
 	public int getAlgorithmeId(){
 		int algoId = 0;
 		while(!getAlgorithmeArray()[algoId].isSelected()){algoId++;}
 		return algoId;
 	}
 	
-	//Initialisation de la fenÃªtre
+	//Initialisation de la fenêtre
 	public Fenetre_Appli(Application app){
 		//Initialisation du cityBoard (voir classe correspondante)
 		setBoard(new CityBoard(app));
@@ -63,16 +63,16 @@ public class Fenetre_Appli extends JFrame{
 		//Initialisation des bouttons de la colonne de droite
 		setStartButton(new Button("Start",app,true));
 		setClearButton(new Button("Clear",app,true));
-		setDataButton(new Button("DonnÃ©es",app,true));
+		setDataButton(new Button("Données",app,true));
 		setHelpButton(new Button("Instructions",app,true));
 		setQuitButton(new Button("Quitter",app,true));
 		
 		
 		/** OBJETS RELATIFS A L'AFFICHAGE DE SIMULATIONS ENREGISTREES **/
 		Saving.setSavedSimuList();
-		JLabel savedSimuLabel = new JLabel("Simulations enregistrÃ©es :");
+		JLabel savedSimuLabel = new JLabel("Simulations enregistrées :");
 		setSavedSimuComboBox(new JComboBox());
-		getSavedSimuComboBox().addItem("DerniÃ¨re simulation");
+		getSavedSimuComboBox().addItem("Dernière simulation");
 		for(String s:Saving.getSavedSimuList())
 			getSavedSimuComboBox().addItem(Saving.savedSimuNameOfSavedSimuString(s));
 		getSavedSimuComboBox().setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -94,7 +94,7 @@ public class Fenetre_Appli extends JFrame{
 		
 		
 		/** OBJETS RELATIFS AU PARAMETRE DE LA FONCTION DE COUT **/
-		JLabel costLabel = new JLabel("PrÃ©fÃ©rence pour la satisfaction du client :");
+		JLabel costLabel = new JLabel("Préférence pour la satisfaction du client :");
 		setCostSlider(new JSlider(SwingConstants.HORIZONTAL,0,100,0));
 		getCostSlider().setMajorTickSpacing(50);
 		getCostSlider().setMinorTickSpacing(10);
@@ -115,14 +115,14 @@ public class Fenetre_Appli extends JFrame{
 		algorithmeLayout.setLayout(new BoxLayout(algorithmeLayout,BoxLayout.PAGE_AXIS));
 		algorithmeLayout.add(algorithmeLabel);
 		setAlgorithmeArray(new RadioButton[]{
-				new RadioButton("DÃ©terministe",algorithme,algorithmeLayout,true),
-				new RadioButton("Recuit simulÃ©",algorithme,algorithmeLayout,true),
+				new RadioButton("Déterministe",algorithme,algorithmeLayout,true),
+				new RadioButton("Recuit simulé",algorithme,algorithmeLayout,true),
 				new RadioButton("Genetique",algorithme,algorithmeLayout,false)
 		});
-		setDivideCheckBox(new JCheckBox("Diviser pour mieux rÃ©gner"));
+		setDivideCheckBox(new JCheckBox("Diviser pour mieux régner"));
 		getDivideCheckBox().setEnabled(false);
 		algorithmeLayout.add(getDivideCheckBox());
-		JLabel stepLabel = new JLabel("Nombre d'Ã©tapes : ");
+		JLabel stepLabel = new JLabel("Nombre d'étapes : ");
 		setStepSpinner(new JSpinner(new SpinnerNumberModel(100,1,999999999,1)));
 		JPanel stepLayout = new JPanel();
 		stepLayout.setLayout(new BoxLayout(stepLayout,BoxLayout.LINE_AXIS));
@@ -147,7 +147,7 @@ public class Fenetre_Appli extends JFrame{
 		
 		
 		/** OBJETS RELATIFS AU NOMBRE DE PASSAGERS **/
-		JLabel occupantLabel = new JLabel("CapacitÃ©s des voitures :");
+		JLabel occupantLabel = new JLabel("Capacités des voitures :");
 		setOccupantSpinner(new JSpinner(new SpinnerNumberModel(5,1,999,1)));
 		JPanel occupantLayout = new JPanel();
 		occupantLayout.setLayout(new BoxLayout(occupantLayout,BoxLayout.PAGE_AXIS));
@@ -170,7 +170,7 @@ public class Fenetre_Appli extends JFrame{
 		getAddClientCheckBox().addActionListener(app);
 		setAddClientSpinner(new JSpinner(new SpinnerNumberModel(1,1,999999,1)));
 		getAddClientSpinner().setEnabled(false);
-		JLabel addClientLabel = new JLabel(" clients Ã  intervalle de ");
+		JLabel addClientLabel = new JLabel(" clients à intervalle de ");
 		setIntervalSpinner(new JSpinner(new SpinnerNumberModel(5,1,999999,1)));
 		getIntervalSpinner().setEnabled(false);
 		JPanel addClientLayout = new JPanel();
@@ -202,7 +202,7 @@ public class Fenetre_Appli extends JFrame{
 		leftColumn.add(costLayout);
 		leftColumn.add(Box.createRigidArea(v1));
 		leftColumn.add(addClientLayout);
-		leftColumn.add(new JLabel("Avec probabilitÃ© d'utilisation du covoiturage dynamique :"));
+		leftColumn.add(new JLabel("Avec probabilité d'utilisation du covoiturage dynamique :"));
 		leftColumn.add(getProbabilitySlider());
 		
 		//Colonne de droite
@@ -225,7 +225,7 @@ public class Fenetre_Appli extends JFrame{
 		rightColumn.add(Box.createRigidArea(v2));
 		rightColumn.add(getQuitButton());
 		
-		//GÃ©omÃ©trie gÃ©nÃ©rale
+		//Géométrie genérale
 		JPanel container = new JPanel();
 		container.setLayout(new FlowLayout());
 		container.add(leftColumn);

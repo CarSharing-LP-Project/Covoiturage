@@ -11,9 +11,9 @@ public class RadioButton extends JRadioButton{
 	{
 		//Titre de la fonction de cout
 		setText(buttonName);
-		//ActivÃ© ou non
+		//Activé ou non
 		setEnabled(isEnable);
-		//On l'ajoute au buttonGroup qui gÃ¨re l'excusivitÃ© de la selection
+		//On l'ajoute au buttonGroup qui gêre l'exclusivité de la selection
 		buttonGroup.add(this);
 		//On l'ajoute au layout (pour qu'il soit visible)
 		layout.add(this);

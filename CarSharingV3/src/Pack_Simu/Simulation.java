@@ -75,7 +75,7 @@ public class Simulation{
 
 	public void newClient(int x,int y)
 	{
-		//S'il y a un client dont la destination n'est pas encore dÃ©finie
+		//S'il y a un client dont la destination n'est pas encore définie
 		if(getNotTargettedYet() != null){
 			getNotTargettedYet().getPos()[1] = new Point(x, y);
 			getClientList().add(getNotTargettedYet());
@@ -85,7 +85,7 @@ public class Simulation{
 			if(dist(getSelectedClient().getPos()[0],getSelectedClient().getPos()[1])==0) deleteClient();
 			else setNeedAlgorithme(true);
 		} else {
-			//Sinon on crÃ©e un nouveau client
+			//Sinon on crée un nouveau client
 			setNotTargettedYet(new Client(clientIdCounter,getTime(),x,y));
 			clientIdCounter++;
 		} 
@@ -109,7 +109,7 @@ public class Simulation{
 		setNeedAlgorithme(true);
 	}
 
-	//Renvoie un tableau contenant les coordonnÃ©es des voitures
+	//Renvoie un tableau contenant les coordonnées des voitures
 	public int[] carIntArray()
 	{
 		int[] t = new int[carNumber*2];
@@ -121,7 +121,7 @@ public class Simulation{
 		return t;
 	}
 
-	//Renvoie un tableau contenant les coordonnÃ©es des clients
+	//Renvoie un tableau contenant les coordonnées des clients
 	public int[] clientIntArray()
 	{
 		int[] t = new int[clientTotalNumber*4 + 2*((getNotTargettedYet()!=null)?1:0)];
@@ -141,37 +141,37 @@ public class Simulation{
 
 
 	/** ALGORITHME : DETERMINATION DU PARCOURS **/
-	private //Numero de l'algorithme sÃ©lectionnÃ©
+	private //Numero de l'algorithme sélectionné
 	int algoId;
-	//Numero de la fonction de coÃ»t sÃ©lectionnÃ©e
+	//Numero de la fonction de coût sélectionnée
 	private int costRate;
-	//boolÃ©en indiquant si le crible diviser pour mieux rÃ©gner doit Ãªtre effectuÃ©
+	//booléen indiquant si le crible diviser pour mieux régner doit être effectué
 	private boolean divide;
-	//Nombre d'Ã©tapes maximum sÃ©lectrionnÃ©
+	//Nombre d'étapes maximum sélectionné
 	private int stepMax;
 	//Nombre de passagers maximum
 	private int occupantCapacity;
 
-	//Fonction algorithme dÃ©terminant le parcours le moins couteux
+	//Fonction algorithme déterminant le parcours le moins couteux
 	public void algorithme(){
 		//1. DEFINITION DU CADRE D'ETUDE
-		//On ne sÃ©lectionne que les voitures qui participent au covoiturage
+		//On ne sélectionne que les voitures qui participent au covoiturage
 		ArrayList<Car> carAlgoList = new ArrayList<Car>();
 		for(Car car: getCarList()){
 			if(car.isDoingCarSharing()) carAlgoList.add(car);
 		}
 		//On cherche le nombre de clients sur le trottoir
 		int clientWaitingNumber = 0;
-		//On crÃ©e la liste des clients Ã  prendre en compte
+		//On crée la liste des clients à prendre en compte
 		ArrayList<Client> clientAlgoList = new ArrayList<Client>();
 		for(Client cli: getClientList()){
 			if(cli.getState() == 0 && cli.isUsingCarSharing()){
 				clientWaitingNumber++;
-				//Les clients sur le trottoir sont rajoutÃ©s au dÃ©but
+				//Les clients sur le trottoir sont rajoutés au début
 				clientAlgoList.add(0,cli);
 			}
 			else if(cli.getState() == 1 && cli.isUsingCarSharing())
-				//Les clients dÃ©jÃ  embarquÃ©s sont rajoutÃ©s Ã  la fin
+				//Les clients déjà embarqués sont rajoutés à la fin
 				clientAlgoList.add(cli);
 		}
 
@@ -184,8 +184,8 @@ public class Simulation{
 		setNeedAlgorithme(false);
 	}
 
-	//fonction dÃ©terminant la matrice de passage la moins couteuse
-	//Une matrice de passage est dÃ©finie de la maniÃ¨re suivante
+	//fonction déterminant la matrice de passage la moins couteuse
+	//Une matrice de passage est définie de la manière suivante
 	//taille : carNumber lignes, 2*clientAlgoNumber colonnes
 	//dans la case (k,2*l) : l'ordre de passage de la voiture k quand elle prend le client l
 	//dans la case (k,2*l+1) : l'ordre de passage de la voiture k quand elle depose le client l
@@ -207,7 +207,7 @@ public class Simulation{
 
 		/** CREATION DE LA MATRICE DE PASSAGE INITIALE **/
 		int[][] matriceDePassage = new int[carAlgoNumber][2*clientAlgoNumber];
-		//On crÃ©e dans le mÃªme temps le tableau des occupants de la voiture renumÃ©rotÃ©s
+		//On crée dans le même temps le tableau des occupants de la voiture renumérotés
 		int[][] carOccupantArray = new int[carAlgoNumber][];
 		//et on cherche le plus grand nombre d'occupants
 		int occupantMax = 0;
@@ -215,21 +215,21 @@ public class Simulation{
 			ArrayList<Client> occupantList = carAlgoList.get(k).getOccupantList();
 			int occupantNumber = occupantList.size();
 			for(int q=0;q<2*clientAlgoNumber;q++)
-				//Les clients sur le trottoir sont rajoutÃ©s au dÃ©but du parcours de la voiture 0
+				//Les clients sur le trottoir sont rajoutés au début du parcours de la voiture 0
 				//On remplit le reste de la matrice avec des -1
 				matriceDePassage[k][q]=(k==0 && q<2*clientWaitingNumber)?q+occupantNumber:-1;
 			occupantMax = Math.max(occupantMax,occupantNumber);
 			carOccupantArray[k] = new int[occupantNumber];
 			for(int z = 0; z<occupantNumber; z++){
-				//On rÃ©cupÃ¨re le numero du client dans le refÃ©rentiel de l'algorithme
+				//On récupére le numero du client dans le reférentiel de l'algorithme
 				int lAlgo = clientAlgoList.indexOf((Client)occupantList.get(z));
 				//On l'ajoute dans la liste des occupants
 				carOccupantArray[k][z] = lAlgo;
-				//On l'ajoute dans le parcours de la voiture, Ã  la suite des clients Ã  prendre (car nÂ°0)
+				//On l'ajoute dans le parcours de la voiture, à la suite des clients à prendre (car n°0)
 				matriceDePassage[k][2*lAlgo+1] = z;
 			}
 		}
-		//On cherchera le coÃ»t minimum des matrices de passages crÃ©Ã©es
+		//On cherchera le coût minimum des matrices de passages créées
 		int costMin = cost(matriceDePassage,carAlgoList,clientAlgoList);
 
 		/*
@@ -240,41 +240,41 @@ public class Simulation{
 		Les quatre derniers aux deux clients respectivement dans les voitures 1 et 0
 		 */
 
-		//On effectue une disjonction de cas selon l'algorithme sÃ©lectionnÃ©
+		//On effectue une disjonction de cas selon l'algorithme sélectionné
 		switch(getAlgoId()) {
 
 		/** ALGORITHME DETERMINISTE **/
 		case 0:
 		{
-			/* Deux Ã©tapes dans l'algorithme dÃ©terministe :
-			 * 1. On gÃ©nÃ¨re tous les parcours possibles d'une voiture, ayant :
-			 *     toBeToken clients Ã  prendre et dÃ©poser
-			 *     occupantNumber clients dÃ©jÃ  embarquÃ©s Ã  dÃ©poser
+			/* Deux étapes dans l'algorithme déterministe :
+			 * 1. On génère tous les parcours possibles d'une voiture, ayant :
+			 *     toBeToken clients à prendre et déposer
+			 *     occupantNumber clients déjà embarqués à déposer
 			 *    Ces parcours seront stockÃ©s dans le tableau possibleParcoursArray
-			 * 2. On rÃ©partit les clients dans les voitures de toutes les faÃ§ons possibles
-			 *     Pour chaque possibilitÃ©, on attribue aux voitures tous les parcours possibles
+			 * 2. On répartit les clients dans les voitures de toutes les façons possibles
+			 *     Pour chaque possibilité, on attribue aux voitures tous les parcours possibles
 			 *     selon le nombre d'occupants et de clients Ã  charge
 			 */
 
-			//Les parcours seront stockÃ©s dans le tableau ci-dessous :
-			//possibleParcours[nombre de clients Ã  chercher][nombre d'occupants Ã  dÃ©poser]
-			// -> liste de parcours de type int[] de taille 2*(nombre de Ã  chercher) + nombre d'occupants
+			//Les parcours seront stockés dans le tableau ci-dessous :
+			//possibleParcours[nombre de clients à chercher][nombre d'occupants à déposer]
+			// -> liste de parcours de type int[] de taille 2*(nombre de à chercher) + nombre d'occupants
 
 			ArrayList<Integer[]>[][] possibleParcours = new ArrayList[clientWaitingNumber+1][];
 			int toBeToken = -1;
 			int possibilityMax = 1;
-			//Tant que (le nombre de client Ã  prendre < nombre de client sur le trottoir
+			//Tant que (le nombre de client à prendre < nombre de client sur le trottoir
 			while( (toBeToken = toBeToken + 1) < clientWaitingNumber + 1
-					//et que le nombre maximal de possibilitÃ©s ne dÃ©passe pas stepMax
+					//et que le nombre maximal de possibilités ne dépasse pas stepMax
 					&& possibilityMax*(2*toBeToken+occupantMax-1)*(2*toBeToken+occupantMax)/2*carAlgoNumber
 					<= getStepMax())
 			{
 				possibleParcours[toBeToken] = new ArrayList[occupantMax+1];
 				for(int occupantNumber = 0; occupantNumber<occupantMax+1;occupantNumber++)
 				{
-					//Dans la boucle, on permute un tableau skipArray de faÃ§on lexicographique
+					//Dans la boucle, on permute un tableau skipArray de façon lexicographique
 					//Exemple toBeToken = 2, occupantNumber = 3,
-					//Les quatre premiÃ¨res cases correspondent Ã  toBeToken
+					//Les quatre premières cases correspondent à toBeToken
 					//Les trois derniÃ¨res Ã  occupantNumber
 					//[0,0,0,0,0,0,0] qWhile = 6
 					//[0,0,0,0,0,0,0] qWhile = 5
@@ -307,8 +307,8 @@ public class Simulation{
 					//...
 					//[0,0,0,0,0,0,0] qWhile = -1
 
-					//skipArray[q] reprÃ©sente le numÃ©ro des possibilitÃ©s restantes que l'on prend dans
-					//parcoursRefList initialisÃ© Ã  [0,1,2,...,2*toBeToken+occupantNumber-1]
+					//skipArray[q] représente le numéro des possibilités restantes que l'on prend dans
+					//parcoursRefList initialisé à [0,1,2,...,2*toBeToken+occupantNumber-1]
 					//Exemple de construction de parcours : toBeToken = 2, occupantNumber = 3
 					//skipArray = [1,2,0,0,2,0,0],
 					//avant de commencer : parcoursCopyList = [0,1,2,3,4,5,6], parcours []
@@ -322,60 +322,60 @@ public class Simulation{
 					//Ainsi skipArray = [1,2,0,0] donnera [1,3,0,2] comme parcours
 
 					int[] skipArray = new int[2*toBeToken+occupantNumber];
-					//On crÃ©e la liste ordonnÃ©e de rÃ©fÃ©rence
+					//On crée la liste ordonnée de référence
 					ArrayList<Integer> parcoursRefList = new ArrayList<Integer>();
 					for(int q =0;q<2*toBeToken+occupantNumber;q++) parcoursRefList.add(q);
 
 					possibleParcours[toBeToken][occupantNumber] = new ArrayList();
 					int qWhile = 2*toBeToken+occupantNumber-1;
 					while(qWhile!=-1){
-						//Enregistrement du parcours si permutÃ©
+						//Enregistrement du parcours si permuté
 						if(qWhile == 2*toBeToken+occupantNumber-1){
-							//On copie le parcours de rÃ©fÃ©rence
+							//On copie le parcours de référence
 							ArrayList<Integer> parcoursCopyList =
 									(ArrayList<Integer>) parcoursRefList.clone();
 							Integer[] t = new Integer[2*toBeToken+occupantNumber];
 							boolean[] occupantIn = new boolean[2*toBeToken+occupantNumber];
 							for(int q = 0; q<2*toBeToken+occupantNumber; q++){
-								//On supprime les Ã©tapes du parcours copiÃ© selon skipArray
+								//On supprime les étapes du parcours copié selon skipArray
 								int rank = (Integer) parcoursCopyList.remove(skipArray[q]);
 								t[q] = rank;
 								occupantIn[rank] = (q%2==0);
 							}
-							//le parcours ne doit pas faire pas dÃ©passer la capacitÃ© maximale du vÃ©hicule
+							//le parcours ne doit pas faire pas dépasser la capacité maximale du véhicule
 							int q = -1;
 							int occupantCompt = occupantNumber;
 							while((q=q+1)<2*toBeToken+occupantNumber
-									//on incrÃ©mente ou dÃ©crÃ©mente le nombre d'occupants
+									//on incrémente ou décrémente le nombre d'occupants
 									&& (occupantCompt=occupantCompt+((occupantIn[q])?1:-1))
-									//et ce nombre doit Ãªtre infÃ©rieur Ã  la capacitÃ© maximale
+									//et ce nombre doit être inférieur à la capacitÃ© maximale
 									<= getOccupantCapacity());
 							//Si pas de surcharge, on ajoute le parcours
 							if(q==2*toBeToken+occupantNumber)
 								possibleParcours[toBeToken][occupantNumber].add(t);
 						}
-						//On incrÃ©mente skipArray[qWhile]
+						//On incrémente skipArray[qWhile]
 						if((skipArray[qWhile]=skipArray[qWhile]+1)
 								//Si on a atteint le maximum de la case,
 								== 2*toBeToken+occupantNumber-qWhile)
 						{
-							//On remet Ã  0 et on dÃ©cale le curseur Ã  gauche
+							//On remet à 0 et on décale le curseur à gauche
 							skipArray[qWhile]=0;
 							qWhile--;
 						}
 						//Si on se trouve dans les clients sur le trottoir aux cases pairs (position)
 						else if(qWhile<2*toBeToken && qWhile%2 == 0
-								//On incrÃ©mente aussi la case impaire (arrivÃ©e)
+								//On incrémente aussi la case impaire (arrivée)
 								&& (skipArray[qWhile+1] = skipArray[qWhile])
-								//A condition que celle-ci ne soit pas trop Ã©levÃ©e
+								//A condition que celle-ci ne soit pas trop élevée
 								== 2*toBeToken+occupantNumber-qWhile-1)
 						{
-							//Auquel cas on remet les deux cases Ã  zÃ©ro et on dÃ©cale le curseur Ã  gauche
+							//Auquel cas on remet les deux cases à zéro et on décale le curseur à gauche
 							skipArray[qWhile+1]=0;
 							skipArray[qWhile]=0;
 							qWhile--;
 						}
-						//Si la permutation est valide, on remet le curseur tout Ã  droite
+						//Si la permutation est valide, on remet le curseur tout à droite
 						else qWhile = 2*toBeToken+occupantNumber-1;
 					}
 					possibilityMax = possibleParcours[toBeToken][occupantNumber].size();
@@ -384,11 +384,11 @@ public class Simulation{
 
 			if(toBeToken <= clientWaitingNumber){
 				System.out.println("Nombre maximal de clients pris en");
-				System.out.println("charge par une voiture rÃ©duit Ã  "+(toBeToken-1));
-				System.out.println("Augmenter le nombre d'Ã©tapes");
+				System.out.println("charge par une voiture réduit à "+(toBeToken-1));
+				System.out.println("Augmenter le nombre d'étapes");
 			}
 
-			//On crÃ©e d'abord un tableau contenant les puissances de 2
+			//On crée d'abord un tableau contenant les puissances de 2
 			int power2n = 1;
 			int[] power2l = new int[clientWaitingNumber]; 
 			for(int l = 0; l<clientWaitingNumber; l++){
@@ -415,18 +415,18 @@ public class Simulation{
 							//On boucle sur les parcours possibles
 							for(Integer[] t :
 								possibleParcours[toTakeList.size()][carOccupantArray[k].length]){
-								//On complÃ¨te la partie des clientWaiting
+								//On complête la partie des clientWaiting
 								for(int l =0; l<n;l++){
 									int l2 = toTakeList.get(l);
 									lineAux[2*l2] = t[2*l];
 									lineAux[2*l2+1] = t[2*l+1];
 								}
-								//On complÃ¨te la partie des occupants
+								//On complête la partie des occupants
 								for(int l=0; l<carOccupantArray[k].length;l++){
 									int l2 = carOccupantArray[k][l];
 									lineAux[2*l2+1] = t[2*n+l];
 								}
-								//On calcule le coÃ»t de la ligne
+								//On calcule le coût de la ligne
 								int cost = cost(new int[][]{lineAux},
 										new ArrayList<Car>(Arrays.asList(carAlgoList.get(k))),clientAlgoList);
 								//Si le cout est petit on copie la ligne
@@ -454,7 +454,7 @@ public class Simulation{
 			}
 			
 			
-			//on attribue aux clients une voiture dans clientCar de faÃ§on lexicographique amÃ©liorÃ©
+			//on attribue aux clients une voiture dans clientCar de façon lexicographique amélioré
 			//Exemple clientWaitingNumber = 2, carNumber = 3,
 			/*
 			 * [0, 0] lWhile = 1
@@ -473,15 +473,15 @@ public class Simulation{
 			 */
 			
 			int[] clientCar = new int[clientWaitingNumber];
-			//ce tableau stocke les indexes des ensembles de clients associÃ© Ã  chaque voiture
+			//ce tableau stocke les indexes des ensembles de clients associé à chaque voiture
 			int[] carPower = new int[carAlgoNumber];
 			carPower[0]=power2n-1;
 			int cost = 0;
 			for(int k = 0; k<carAlgoNumber;k++) cost += carCost[k][carPower[k]];
 			
-			//Cet entier compte les voitures qui dÃ©passent le nombre de clients restreints
+			//Cet entier compte les voitures qui dépassent le nombre de clients restreints
 			int tooManyInCar = (carCost[0][power2n-1] == -1)?1:0;
-			//Ce tableau de boolÃ©ens contient les sens d'incrÃ©mentation pour un lexicographique amÃ©liorÃ©
+			//Ce tableau de booléens contient les sens d'incrémentation pour un lexicographique amélioré
 			boolean[] lReverse = new boolean[clientWaitingNumber];
 			//Variable de boucle correspondant au waitingClient dont on change la voiture
 			int lWhile = clientWaitingNumber-1;
@@ -491,20 +491,20 @@ public class Simulation{
 					for(int k = 0; k<carAlgoNumber;k++)
 						matriceDePassage[k] = carLine[k][carPower[k]];
 				}
-				//Si on est arrivÃ© au maximum d'in(dÃ©)crÃ©mentation
+				//Si on est arrivé au maximum d'incrémentation
 				if(clientCar[lWhile] == ((lReverse[lWhile])?0:carAlgoNumber-1))
 				{
-					//On dÃ©cale le curseur Ã  gauche sans oublier d'inverser le sens
+					//On décale le curseur à gauche sans oublier d'inverser le sens
 					lReverse[lWhile] = !lReverse[lWhile];
 					lWhile--;
 				}
-				//Sinon on procÃ¨de Ã  la permutation
+				//Sinon on procède à la permutation
 				else {
-					//On enlÃ¨ve le client Ã  la liste des clients de son ancienne voiture
+					//On enlève le client à la liste des clients de son ancienne voiture
 					int k0 = clientCar[lWhile];
-					//On garde en mÃ©moire l'ancien coÃ»t
+					//On garde en mémoire l'ancien coût
 					int k0LastCost = carCost[k0][carPower[k0]];
-					//On enlÃ¨ve le client lWhile
+					//On enlêve le client lWhile
 					carPower[k0] -= power2l[lWhile];
 					//on regarde si on est sorti d'une situation interdite
 					if(k0LastCost == -1 && carCost[k0][carPower[k0]] != -1)	tooManyInCar--;
@@ -514,7 +514,7 @@ public class Simulation{
 					
 					//On ajoute le client Ã  la liste des clients de sa nouvelle voiture
 					int k1 = clientCar[lWhile];
-					//On garde en mÃ©moire l'ancien coÃ»t
+					//On garde en mémoire l'ancien coût
 					int k1LastCost = carCost[k1][carPower[k1]];
 					//On rajoute le client lWhile
 					carPower[k1] += power2l[lWhile];
@@ -533,17 +533,17 @@ public class Simulation{
 
 		case 1:
 		{
-			/* on a deux compteurs qui Ã©voluent au cours du temps et qui
-			 * peuvent servir de condition d'arrÃªt du while :
-			 * le numÃ©ro de l'Ã©tape en cours et une "tempÃ©rature"
+			/* on a deux compteurs qui évoluent au cours du temps et qui
+			 * peuvent servir de condition d'arrêt du while :
+			 * le numero de l'étape en cours et une "température"
 			 */
 			int etape = 0;
 			double temperature = 1000;
-			// DÃ‰BUT DES ITÃ‰RATIONS
+			// DEBUT DES ITERATIONS
 			while (etape < getStepMax() ){
-				/* on commence par crÃ©er une copie de la matrice de passage,
-				 * sur laquelle on va effectuer des modifications alÃ©atoires,
-				 * Ã  caractÃ¨re Ã©lÃ©mentaire,
+				/* on commence par créer une copie de la matrice de passage,
+				 * sur laquelle on va effectuer des modifications aléatoires,
+				 * Ã  caractère élémentaire,
 				 * pour ensuite la comparer avec la matrice courante
 				 */
 				int[][] copy = copyMatrix(matriceDePassage);
@@ -556,22 +556,22 @@ public class Simulation{
 						car=k;
 					}
 				}
-				/* 2 cas dans l'Ã©tat actuel des choses :
+				/* 2 cas dans l'état actuel des choses :
 				 * soit le client est toujours sur le trottoir,
 				 * soit il est dans une voiture
 				 */
 				if (clientRandom < clientWaitingNumber) {
 					/* si le client est toujours sur le trottoir,
-					 * l'idÃ©e est de le sortir de la matrice
-					 * et de le rÃ©injecter dedans Ã  un endroit alÃ©atoire
-					 * mais nÃ©anmoins compatible avec occupantMax
+					 * l'idée est de le sortir de la matrice
+					 * et de le réinjecter dedans à un endroit aléatoire
+					 * mais néanmoins compatible avec occupantMax
 					 */
 					// on le retire de la matrice de passage
 					int pos = copy[car][2*clientRandom];
 					int target = copy[car][2*clientRandom+1];
 					copy[car][2*clientRandom]=-1;
 					copy[car][2*clientRandom+1]=-1;
-					// il faut dÃ©caler les ordres de passage de la voiture pour combler les trous
+					// il faut décaler les ordres de passage de la voiture pour combler les trous
 					for (int q=0; q<2*clientAlgoNumber; q++){
 						if(copy[car][q]>target){
 							copy[car][q]=copy[car][q]-2;
@@ -582,17 +582,17 @@ public class Simulation{
 							}
 						}
 					}
-					// Ã  prÃ©sent on rÃ©injecte le client
+					// Ã  présent on réinjecte le client
 					// on choisit au hasard la voiture qui va le transporter
 					int quelleCar = (int)Math.floor(Math.random()*carAlgoNumber);
-					/* on dÃ©termine p le nombre d'entiers positifs sur la ligne,
-					 * ils vont de 0 Ã  p-1
+					/* on détermine p le nombre d'entiers positifs sur la ligne,
+					 * ils vont de 0 à p-1
 					 */
 					int m = nombreDeMoinsUn(copy[quelleCar]);
 					int p = 2*clientAlgoNumber-m;
-					/* on choisit un ordre de passage alÃ©atoire pour
-					 * la position de dÃ©part du client, sachant
-					 * qu'il doit Ãªtre compris entre 0 et p
+					/* on choisit un ordre de passage aléatoire pour
+					 * la position de départ du client, sachant
+					 * qu'il doit être compris entre 0 et p
 					 * et doit respecter la condition occupantCapacity
 					 */
 					/* on commence donc par lister les indices entre 0 et p
@@ -605,12 +605,12 @@ public class Simulation{
 						}
 					}
 					/* une fois la liste faite,
-					 * il reste Ã  y prendre un Ã©lÃ©ment alÃ©atoire
+					 * il reste à y prendre un élément aléatoire
 					 */
 					int lenPos = compatiblePos.size();
 					int randPos = compatiblePos.get((int)Math.floor(lenPos*Math.random()));
-					/* on dÃ©cale d'un cran les ordres de passage
-					 * supÃ©rieurs Ã  randPos
+					/* on décale d'un cran les ordres de passage
+					 * supérieurs Ã  randPos
 					 */
 					for(int q =0 ; q<2*clientAlgoNumber ; q++){
 						if(copy[quelleCar][q]>=randPos){
@@ -618,15 +618,15 @@ public class Simulation{
 						}
 					}
 					copy[quelleCar][2*clientRandom]=randPos;
-					/* on choisit un ordre de passage alÃ©atoire pour
+					/* on choisit un ordre de passage aléatoire pour
 					 * la position cible du client, sachant
-					 * qu'il doit Ãªtre compris entre randPos+1 et p+1
+					 * qu'il doit être compris entre randPos+1 et p+1
 					 * et respecter la condition occupantCapacity
 					 */
 					/* Ã  partir de randPos+1 on liste donc tous les
 					 * indices compatibles dans l'ordre croissant
-					 * jusqu'Ã  trouver un indice incompatible ou
-					 * jusqu'Ã  arriver Ã  p+1
+					 * jusqu'à trouver un indice incompatible ou
+					 * jusqu'à arriver à p+1
 					 */
 					boolean critere = true;
 					ArrayList<Integer> compatibleTarget = new ArrayList<Integer>();
@@ -642,12 +642,12 @@ public class Simulation{
 						}
 					}
 					/* une fois la liste faite,
-					 * il reste Ã  y prendre un Ã©lÃ©ment alÃ©atoire
+					 * il reste à y prendre un élément aléatoire
 					 */
 					int lenTarget = compatibleTarget.size();
 					int randTarget = compatibleTarget.get((int)Math.floor(lenTarget*Math.random()));
-					/* on dÃ©cale d'un cran les ordres de passage
-					 * supÃ©rieurs Ã  randTarget
+					/* on décale d'un cran les ordres de passage
+					 * supérieurs à randTarget
 					 */
 					for(int q =0 ; q<2*clientAlgoNumber ; q++){
 						if(copy[quelleCar][q]>=randTarget){
@@ -657,36 +657,36 @@ public class Simulation{
 					copy[quelleCar][2*clientRandom+1]=randTarget;
 				}
 				else {
-					/* si le client est dÃ©jÃ  dans une voiture
-					 * (le cas oÃ¹ le client est arrivÃ© n'apparaÃ®t pas car il
-					 * a alors Ã©tÃ© sorti de clientArray),
+					/* si le client est déjà dans une voiture
+					 * (le cas où le client est arrivé n'apparaît pas car il
+					 * a alors été sorti de clientArray),
 					 * alors il ne bouge pas de voiture, on change simplement sa
 					 * destination d'indice
 					 */
 					//on retire sa destination de la matrice de passage
 					int target = copy[car][2*clientRandom+1];
 					copy[car][2*clientRandom+1]=-1;
-					// il faut dÃ©caler les ordres de passage de la voiture pour combler les trous
+					// il faut décaler les ordres de passage de la voiture pour combler les trous
 					for (int q=0; q<2*clientAlgoNumber; q++){
 						if(copy[car][q]>target){
 							copy[car][q]=copy[car][q]-1;
 						}
 					}
-					// Ã  prÃ©sent on rÃ©injecte la destination
-					/* on dÃ©termine p le nombre d'entiers positifs sur la ligne,
-					 * ils vont de 0 Ã  p-1
+					// Ã  présent on réinjecte la destination
+					/* on détermine p le nombre d'entiers positifs sur la ligne,
+					 * ils vont de 0 à p-1
 					 */
 					int m = nombreDeMoinsUn(copy[car]);
 					int p = 2*clientAlgoNumber-m;
-					/* on choisit un ordre de passage alÃ©atoire pour
+					/* on choisit un ordre de passage aléatoire pour
 					 * la destination du client, sachant
-					 * qu'il doit Ãªtre compris entre 0 et p
+					 * qu'il doit être compris entre 0 et p
 					 * et respecter la condition occupantMax
 					 */
-					/* Ã  partir de 0 on liste donc tous les
+					/* à partir de 0 on liste donc tous les
 					 * indices compatibles dans l'ordre croissant
-					 * jusqu'Ã  trouver un indice incompatible ou
-					 * jusqu'Ã  arriver Ã  p
+					 * jusqu'à trouver un indice incompatible ou
+					 * jusqu'à arriver Ã  p
 					 */
 					boolean critere = true;
 					ArrayList<Integer> compatibleTarget = new ArrayList<Integer>();
@@ -701,12 +701,12 @@ public class Simulation{
 						}
 					}
 					/* une fois la liste faite,
-					 * il reste Ã  y prendre un Ã©lÃ©ment alÃ©atoire
+					 * il reste à y prendre un élément aléatoire
 					 */
 					int lenTarget = compatibleTarget.size();
 					int randTarget = compatibleTarget.get((int)Math.floor(lenTarget*Math.random()));
 					/* on dÃ©cale d'un cran les ordres de passage
-					 * supÃ©rieurs Ã  randTarget
+					 * supérieurs à randTarget
 					 */
 					for(int q =0 ; q<2*clientAlgoNumber ; q++){
 						if(copy[car][q]>=randTarget){
@@ -716,10 +716,10 @@ public class Simulation{
 					copy[car][2*clientRandom+1]=randTarget;
 				}
 				int coutDeCopy = cost(copy,carAlgoList,clientAlgoList);
-				/* Ã  prÃ©sent vient le test comparatif de coÃ»t :
-				 * si le nouveau coÃ»t est plus faible, on accepte la solution ;
-				 * sinon on l'accepte avec une probabilitÃ© de
-				 * exp(-(le module de la diffÃ©rence des coÃ»ts)/la tempÃ©rature)
+				/* à présent vient le test comparatif de coût :
+				 * si le nouveau coût est plus faible, on accepte la solution ;
+				 * sinon on l'accepte avec une probabilité de
+				 * exp(-(le module de la différence des coûts)/la température)
 				 */
 				if (coutDeCopy<=costMin){
 					matriceDePassage=copy;
@@ -733,7 +733,7 @@ public class Simulation{
 						costMin=coutDeCopy;
 					}
 				}
-				// pour finir on incrÃ©mente les compteurs
+				// pour finir on incrémente les compteurs
 				etape=etape+1;
 				temperature=0.99*temperature;
 			}
@@ -747,7 +747,7 @@ public class Simulation{
 
 		}
 
-		//On affiche la matrice de passage dans la console ainsi que son coÃ»t
+		//On affiche la matrice de passage dans la console ainsi que son coût
 		System.out.println("Matrice de passage :");
 		printMatrix(matriceDePassage);
 		System.out.println("cost : "+costMin);
@@ -757,7 +757,7 @@ public class Simulation{
 
 
 
-	/* la fonction suivante dÃ©termine, pour un indice d'un point,
+	/* la fonction suivante détermine, pour un indice d'un point,
 	 * le nombre de clients dans la voiture juste avant d'atteindre ce point
 	 */
 	int passagers ( int[] t, int indice) {
@@ -783,7 +783,7 @@ public class Simulation{
 		return pass;
 	}
 	
-	/* nombreDeMoinsUn dÃ©termine le nombre de cases
+	/* nombreDeMoinsUn détermine le nombre de cases
 	 * qui sont des -1 dans un tableau d'entiers
 	 */
 	int nombreDeMoinsUn(int[] t){
@@ -811,7 +811,7 @@ public class Simulation{
 
 	
 	/** FONCTIONS RELATIVES AU CALCUL DU COUT **/
-	//il s'agit de la distance en norme 1, nous sommes Ã  Manhattan
+	//il s'agit de la distance en norme 1, nous sommes à Manhattan
 	int dist( Point p1, Point p2)
 	{
 		return Math.abs(p1.getX()-p2.getX()) + Math.abs(p1.getY()-p2.getY());
@@ -825,7 +825,7 @@ public class Simulation{
 		return -1;
 	}
 
-	//Cette fonction calcule le cout d'un parcours dÃ©fini par une matrice de passage
+	//Cette fonction calcule le cout d'un parcours défini par une matrice de passage
 	int cost(int[][] matriceDePassage, ArrayList<Car> carAlgoList, ArrayList<Client> clientAlgoList)
 	{
 		int carAlgoNumber = carAlgoList.size();
@@ -835,14 +835,14 @@ public class Simulation{
 			int clientCost = 0;
 			int bestDistSum = 0;
 			int carDist = 0;
-			//rank est le numÃ©ro d'ordre de l'Ã©tape de la voiture
+			//rank est le numéro d'ordre de l'étape de la voiture
 			int rank = 0;
 			Point p0 = null;
 			int q1;
-			//On cherche la rankiÃ¨me Ã©tape
+			//On cherche la rankiême étape
 			while((q1 = searchInArray(rank,matriceDePassage[k]))!=-1)
 			{
-				//On rÃ©cupÃ¨re le point correspondant Ã  q1
+				//On récupêre le point correspondant à q1
 				Point p1 = clientAlgoList.get(q1/2).getPos()[q1%2];
 				//On ajoute la distance entre la voiture et p1 ou entre p0 et p1 si p0 non null
 				carDist += dist((p0==null)?carAlgoList.get(k).getPos():p0, p1);
@@ -853,7 +853,7 @@ public class Simulation{
 					clientCost += realDist * realDist /(bestDist*bestDist);
 					bestDistSum += bestDist;
 				}
-				//On passe Ã  l'Ã©tape suivante
+				//On passe à l'étape suivante
 				rank++;
 				p0 = p1;
 			}
@@ -863,21 +863,21 @@ public class Simulation{
 		return cost;
 	}
 
-	//Cette fonction remplit les listes parcoursList des voitures Ã  partir d'une matriceDePassage
-	//Logiquement cette fonction est appelÃ©e lorsqu'on a trouvÃ© la matriceDePassage qui minimise le cout
+	//Cette fonction remplit les listes parcoursList des voitures à partir d'une matriceDePassage
+	//Logiquement cette fonction est appelée lorsqu'on a trouvé la matriceDePassage qui minimise le cout
 	void setParcours(int[][] matriceDePassage,ArrayList<Car> carAlgoList, ArrayList<Client> clientAlgoList)
 	{
 		int carAlgoNumber = carAlgoList.size();
 		for(int k=0; k<carAlgoNumber; k++)
 		{
-			//On rÃ©initialise le parcours
+			//On réinitialise le parcours
 			carAlgoList.get(k).setParcoursList(new ArrayList<ParcoursStep>());
 			int rank = 0;
 			int q;
-			//On cherche la stepNumiÃ¨me Ã©tape dans la matrice de passage
+			//On cherche la stepNumiême étape dans la matrice de passage
 			while((q = searchInArray(rank,matriceDePassage[k]))!=-1)
 			{
-				//on ajoute l'Ã©tape au parcours de la voiture
+				//on ajoute l'étape au parcours de la voiture
 				carAlgoList.get(k).getParcoursList().add(new ParcoursStep(clientAlgoList.get(q/2), q%2));
 				rank++;
 			}
@@ -886,38 +886,38 @@ public class Simulation{
 
 
 	/** MOUVEMENTS ELEMENTAIRES **/
-	public //avance les Car d'une case vers leur prochaine Ã©tape
+	public //avance les Car d'une case vers leur prochaine étape
 	void OneMove()
 	{
-		//On incrÃ©mente le temps de la simulation
+		//On incrémente le temps de la simulation
 		setTime(getTime() + 1);
 		//Nombre de voitures en circulation
 		int activeCar = 0;
 		//Somme des vitesses des voitures
 		int speedSum = 0;
-		//Somme des vitesses instantanÃ©es des clients
+		//Somme des vitesses instantanées des clients
 		double clientRealSpeedSum = 0;
 		for(Iterator<Car> it= getCarList().iterator();it.hasNext();)
 		{
 			Car car = it.next();
-			//Si la voiture n'a pas terminÃ© son parcours
+			//Si la voiture n'a pas terminé son parcours
 			if(!car.getParcoursList().isEmpty()){
 				activeCar++;
 				int X = car.getPos().getX();
 				int Y = car.getPos().getY();
 				ParcoursStep step = car.getParcoursList().get(0);
 				Point p = step.cli.getPos()[step.type];
-				//Par dÃ©faut la voiture est de vitesse la moitiÃ© de sa longueur par unitÃ© de temps
+				//Par défaut la voiture est de vitesse la moitié de sa longueur par unité de temps
 				int v = carLength/2;
 				//Si la voiture se trouve dans une rue
 				if(car.streetId != -1)
 					v = v-v*2*carLength*(-1+
-							//On calcule et on dÃ©crÃ©mente le nombre de voitures dans la rue
+							//On calcule et on décrémente le nombre de voitures dans la rue
 					streetArray[(car.streetId/2)%cityWidth][(car.streetId/2)/cityWidth][car.streetId%2]--
 					)/streetLength;
-				//Si la vitesse est nulle, on donne une vitesse de 1 px Ã  une probabilitÃ© de 20%
+				//Si la vitesse est nulle, on donne une vitesse de 1 px à une probabilité de 20%
 				if(v<=0) v=(Math.random()>0.8)?1:0;
-				//On incrÃ©mente les donnÃ©es de simulations
+				//On incrémente les données de simulations
 				speedSum += v;
 				setDistSum(getDistSum() + v);
 				setConsumption(getConsumption() + ((v== 0 || v == 1)?carLength/2:v));
@@ -926,15 +926,15 @@ public class Simulation{
 				else if(Y < p.getY()) car.getPos().set(X,(Y+v>p.getY())?p.getY():Y+v);
 				else if(Y > p.getY()) car.getPos().set(X,(Y-v<p.getY())?p.getY():Y-v);
 				else {
-					//Si la voiture est arrivÃ©e Ã  une Ã©tape du parcours
-					//On change l'Ã©tat du client embarquÃ© ou dÃ©posÃ©
+					//Si la voiture est arrivée à une étape du parcours
+					//On change l'état du client embarqué ou déposé
 					step.cli.setState(step.cli.getState() + 1);
-					//On l'ajoute Ã  la liste des occupants s'il est embarquÃ©
+					//On l'ajoute à la liste des occupants s'il est embarqué
 					if(step.cli.getState() == 1){
 						car.getOccupantList().add(step.cli);
 						step.cli.setCar(car);
 					}
-					//Sinon on l'y enlÃ¨ve
+					//Sinon on l'y enlève
 					else{
 						arrivedClient++;
 						clientSpeedSum += (double)dist(step.cli.getPos()[0],step.cli.getPos()[1]) 
@@ -943,17 +943,17 @@ public class Simulation{
 						getClientList().remove(step.cli);
 						clientTotalNumber--;
 					}
-					//On supprime l'Ã©tape du parcours de la voiture
+					//On supprime l'étape du parcours de la voiture
 					car.getParcoursList().remove(0);
 				}
-				//Si la voiture est toujours en circulation, on calcule le numÃ©ro de sa rue
+				//Si la voiture est toujours en circulation, on calcule le numéro de sa rue
 				if(!car.getParcoursList().isEmpty()){
 					X = car.getPos().getX()/streetLength;
 					Y = car.getPos().getY()/streetLength;
 					if(car.getPos().getX() % streetLength == 0 && car.getPos().getY() % streetLength == 0)
 						car.streetId = -1;
 					else car.streetId = 2*Y*cityWidth+2*X+((car.getPos().getX() % streetLength == 0)?0:1);
-					//On incrÃ©mente le nombre de voitures dans la rue de la voiture
+					//On incrémente le nombre de voitures dans la rue de la voiture
 					if(car.streetId != -1) streetArray[X][Y][car.streetId%2]++;
 				}
 				//On supprime la voiture si elle ne fait pas de covoiturage
@@ -1053,12 +1053,12 @@ public class Simulation{
 		this.notTargettedYet = notTargettedYet;
 	}
 
-	public //Numero de l'algorithme sÃ©lectionnÃ©
+	public //Numero de l'algorithme sélectionné
 	int getAlgoId() {
 		return algoId;
 	}
 
-	public void setAlgoId(//Numero de l'algorithme sÃ©lectionnÃ©
+	public void setAlgoId(//Numero de l'algorithme sélectionné
 	int algoId) {
 		this.algoId = algoId;
 	}

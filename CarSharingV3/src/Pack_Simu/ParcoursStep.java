@@ -1,7 +1,7 @@
 package Pack_Simu;
 
-//Cette classe reprÃ©sente un point de passage d'une voiture faisant du covoiturage
-//Il s'agit d'un point de montÃ©e ou de descente d'un client
+//Cette classe représente un point de passage d'une voiture faisant du covoiturage
+//Il s'agit d'un point de montée ou de descente d'un client
 public class ParcoursStep
 {
 	Client cli;

@@ -8,11 +8,11 @@ public class Car
 {
 	private int id;
 	private Point pos;
-	//parcoursList contient les Ã©tapes du parcours
+	//parcoursList contient les étapes du parcours
 	private ArrayList<ParcoursStep> parcoursList = new ArrayList<ParcoursStep>();
 	//occupantList contient les clients dans la voiture
 	private ArrayList<Client> occupantList = new ArrayList<Client>();
-	//indique le numÃ©ro de la rue dans laquelle la voiture se trouve
+	//indique le numéro de la rue dans laquelle la voiture se trouve
 	int streetId;
 	private boolean isDoingCarSharing;
 

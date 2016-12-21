@@ -67,8 +67,8 @@ public class Saving
 	/** FONCTIONS D'AJOUT, DE MODIFICATION ET DE SUPPRESSION DE SIMULATIONS **/
 	static void newSavedSimu(int[][] savedSimuArray,Fenetre_Appli window){
 		String savedSimuName = (String)JOptionPane.showInputDialog(window,
-				"Veuillez entrer le nom de la simulation Ã  enregistrer :","Nom de la simulation",
-				JOptionPane.INFORMATION_MESSAGE,null,null,"Exemple nÂ°"+(getSavedSimuList().size()+1));
+				"Veuillez entrer le nom de la simulation à enregistrer :","Nom de la simulation",
+				JOptionPane.INFORMATION_MESSAGE,null,null,"Exemple n°"+(getSavedSimuList().size()+1));
 		if(savedSimuName != null)
 		{
 			String savedSimuString = savedSimuStringOfSavedSimuNameAndArray(savedSimuName, savedSimuArray);

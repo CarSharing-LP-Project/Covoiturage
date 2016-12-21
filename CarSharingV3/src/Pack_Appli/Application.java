@@ -18,12 +18,12 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 {
 	private Simulation simu;
 	Fenetre_Appli window;
-	//Par d√©faut la fen√™tre de donn√©es n'est pas affich√©e
+	//Par dÈfaut la fenÍtre de donnÈes n'est pas affichÈe
 	SideWindow dataWindow = null;
 	//Taille des blocs de la ville
 	private int blockSize;
 
-	//initialise la simulation et cr√©e et ouvre la fen√™tre
+	//initialise la simulation et crÈe et ouvre la fenÍtre
 	Application()
 	{
 		setSimu(new Simulation(0,1,0,0));
@@ -34,30 +34,30 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 
 
 	/** AFFICHAGE DE SIMULATIONS ENREGISTREES **/
-	//Active ou d√©sactive le bouton "Afficher"
+	//Active ou dÈsactive le bouton "Afficher"
 	void setDisplaySavedSimuButton()
 	{
 		window.getDisplaySavedSimuButton().setEnabled(
 				window.getSavedSimuComboBox().getSelectedIndex()!=0 || lastSimuArray!=null);
 	}
 
-	//Active ou d√©sactive le bouton "Supprimer"
+	//Active ou dÈsactive le bouton "Supprimer"
 	void setDeleteSavedSimuButton()
 	{
 		window.getDeleteSavedSimuButton().setEnabled(window.getSavedSimuComboBox().getSelectedIndex()!=0);
 	}
 
-	//Affiche sur le cityboard la simulation enregistr√©e s√©lectionn√©e
+	//Affiche sur le cityboard la simulation enregistrÈe sÈlectionnÈe
 	void displaySavedSimu()
 	{
 		clear();
-		//On r√©cup√®re le num√©ro de la simulation enregistr√©e
+		//On rÈcupÍre le numÈro de la simulation enregistrÈe
 		int n = window.getSavedSimuComboBox().getSelectedIndex();
-		//S'il s'agit de la derni√®re simulation
+		//S'il s'agit de la derniÍre simulation
 		int[][] t = (n==0)? lastSimuArray:
-		//Sinon on r√©cup√®re le tableau de la simulation
+		//Sinon on rÈcupËre le tableau de la simulation
 		Saving.savedSimuArrayOfSavedSimuString(Saving.getSavedSimuList().get(n-1));
-		//on ajuste tous les param√®tres
+		//on ajuste tous les paramËtres
 		window.getAlgorithmeArray()[t[0][0]].setSelected(true);
 		window.getCostSlider().setValue(t[0][1]);
 		window.getDivideCheckBox().setSelected(t[0][2]==1);
@@ -72,7 +72,7 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 			window.getIntervalSpinner().setValue(t[0][8]);
 			window.getProbabilitySlider().setValue(t[0][9]);
 		}
-		//on cr√©e les voitures et les clients de la configuration enregistr√©e
+		//on crÈe les voitures et les clients de la configuration enregistr√©e
 		for(int k=0;k<t[1].length;k=k+2)
 			getSimu().newCar(t[1][k],t[1][k+1]);
 		for(int l=0;l<t[2].length;l=l+2)
@@ -81,20 +81,20 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 	
 	void newSavedSimulation()
 	{
-		//On r√©cup√®re le num√©ro de la simulation enregistr√©e
+		//On rÈcupÍre le numÈro de la simulation enregistrÈe
 		int n = window.getSavedSimuComboBox().getSelectedIndex();
-		//Si aucune simulation enregistr√©e n'est s√©lectionn√©e il s'agit d'une nouvelle
+		//Si aucune simulation enregistrÈe n'est sÈlectionnÈe il s'agit d'une nouvelle
 		if(n==0) Saving.newSavedSimu(simuArray(),window);
-		//Sinon on modifie la simulation enregistr√©e
+		//Sinon on modifie la simulation enregistrÈe
 		else Saving.editSavedSimu(simuArray(),n-1,window);
 	}
 
 
 	/** LANCEMENT ET REMISE A ZERO DE LA SIMULATION **/
-	//Ce tableau sauvegarde la simulation pr√©c√©dente
+	//Ce tableau sauvegarde la simulation prÈcÈdente
 	int[][] lastSimuArray;
 
-	//renvoie le tableau de sauvegarde asoci√© aux param√®tres et √† simu
+	//renvoie le tableau de sauvegarde asociÈ aux paramËtres et ‡ simu
 	int[][] simuArray()
 	{
 		return new int[][]{{window.getAlgorithmeId(),
@@ -114,9 +114,9 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 	{
 		//on sauvegarde la simulation avant de la modifier
 		lastSimuArray = simuArray();
-		//on met √† jour le bouton "afficher"
+		//on met ‡ jour le bouton "afficher"
 		setDisplaySavedSimuButton();
-		//On informe simu des param√®tres d'algorithme
+		//On informe simu des paramËtres d'algorithme
 		getSimu().setAlgoId(window.getAlgorithmeId());
 		getSimu().setCostRate(window.getCostSlider().getValue());
 		getSimu().setDivide(window.getDivideCheckBox().isSelected());
@@ -129,21 +129,21 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 	//Arrete et efface la simulation
 	void clear()
 	{
-		//arr√™te le timer
+		//arrÍte le timer
 		timerStop();
-		//r√©initialise les variables de simulations
+		//rÈinitialise les variables de simulations
 		setSimu(new Simulation(window.getBoard().getSquareSize()/2,
 				(getBlockSize()+1)*window.getBoard().getSquareSize(),
 				window.getBoard().getBoardWidth()*window.getBoard().getSquareSize(),
 				window.getBoard().getBoardHeight()*window.getBoard().getSquareSize()));
-		//on actualise la fen√™tre
+		//on actualise la fenÍtre
 		refresh();
 	}
 
 	
 	/** TIMER : DEMARRAGE, PAUSE ET EVENEMENTS **/
 	Timer timer = new Timer(0,this);
-	//Cr√©e le timer √† partir de la valeur du slideur et d√©marre
+	//CrÈe le timer ‡ partir de la valeur du slideur et dÈmarre
 	void timerStart()
 	{
 		window.getStartButton().setText("Pause");
@@ -151,46 +151,46 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 		timer.start();
 	}
 	
-	//Arr√™te le timer
+	//ArrÍte le timer
 	void timerStop()
 	{
 		timer.stop();
 		window.getStartButton().setText("Start");
 	}
 
-	//actions aux √©ch√©ances du timer
+	//actions aux ÈchÈances du timer
 	void timerEvent()
 	{
-		//On rajoute un client automatiquement si demand√©
+		//On rajoute un client automatiquement si demandÈ
 		addClient();
-		//On calcule le parcours si la configuration a chang√©
+		//On calcule le parcours si la configuration a changÈ
 		if(getSimu().isNeedAlgorithme()) doAlgorithme();
 		//on bouge les voitures d'un cran
 		getSimu().OneMove();
-		//on actualise la fen√™tre
+		//on actualise la fenÍtre
 		refresh();
 	}
 
-	//Mise √† jour de la fen√™tre
+	//Mise ‡ jour de la fenÍtre
 	void refresh()
 	{
 		//On redessine le cityBoard
 		window.getBoard().repaint();
-		//On met √† jour la fen√™tre de donn√©es
+		//On met ‡ jour la fenÍtre de donnÈes
 		if(dataWindow != null) dataWindow.setDataLabel(getSimu());
 	}
 	
-	//Compte √† rebours
+	//Compte ‡ rebours
 	int addClientTime = -1;
-	//Cette fonction g√®re l'ajout automatique d'un client al√©atoire
+	//Cette fonction gÍre l'ajout automatique d'un client alÈatoire
 	void addClient(){
-		//Si la case d'ajout automatique est s√©lectionn√©e on r√©initialise le compte √† rebours
+		//Si la case d'ajout automatique est sÈlectionnÈe on rÈinitialise le compte ‡ rebours
 		if(window.getAddClientCheckBox().isSelected() && addClientTime == -1)
 			addClientTime = (Integer) window.getIntervalSpinner().getValue();
 		if(addClientTime != -1){
-			//Lorsque le compte √† rebours est √† z√©ro, on fait autant de fois demand√© l'ajout
+			//Lorsque le compte ‡ rebours est ‡ zÈro, on fait autant de fois demandÈ l'ajout
 			if(addClientTime == 0) for(int z = 0;z<(Integer) window.getAddClientSpinner().getValue();z++){
-				//On simule deux clics d'abscisse et d'ordonn√©e al√©atoire
+				//On simule deux clics d'abscisse et d'ordonnÈe alÈatoire
 				getSimu().newClient(randomWidth(), randomHeight());
 				getSimu().newClient(randomWidth(), randomHeight());
 				//Si le voyageur ne participe pas au covoiturage
@@ -203,12 +203,12 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 					getSimu().getSelectedCar().getParcoursList().add(new ParcoursStep(getSimu().getSelectedClient(),1));
 				}
 			}
-			//On d√©cr√©mente le compte √† rebours
+			//On dÈcrÈmente le compte ‡ rebours
 			addClientTime--;
 		}
 }
 	
-	//Ces fonctions g√©n√®rent des coordonn√©es al√©atoirement
+	//Ces fonctions gÈnËrent des coordonnÈes alÈatoirement
 	int randomWidth(){return blockModulo((int) (window.getBoard().getWidth()*Math.random()));}
 	int randomHeight(){return blockModulo((int) (window.getBoard().getHeight()*Math.random()));}
 	
@@ -224,17 +224,17 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 		if (event.getButton()==MouseEvent.BUTTON3) getSimu().setSelectedCar(selectCar(i,j));
 	}
 	
-	//fonction qui √† une coordonn√©e sur le board associe la coordonn√©e du carrefour proche
+	//fonction qui ‡ une coordonnÈe sur le board associe la coordonnÈe du carrefour proche
 	int blockModulo(int x){
 		return (x/window.getBoard().getSquareSize())/(getBlockSize()+1)*(getBlockSize()+1)*window.getBoard().getSquareSize();
 	}
 	
 	int dragType = -1;
-	//Actions lorsque la souris est relach√©e
+	//Actions lorsque la souris est relachÈe
 	public void mouseReleased(MouseEvent event){
 		int x = blockModulo(event.getX());
 		int y = blockModulo(event.getY());
-		//Si on est √† l'int√©rieur du CityBoard, on cr√©e ou modifie un client ou une voiture
+		//Si on est ‡ l'intÈrieur du CityBoard, on crÈe ou modifie un client ou une voiture
 		if(x>=0 && x<window.getBoard().getHeight() && y>=0 && y<window.getBoard().getWidth())
 		{
 			if(dragType == -1){
@@ -243,12 +243,12 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 				//Clique droit
 				if (event.getButton()==MouseEvent.BUTTON3) getSimu().newCar(x,y);
 			}
-			//Si un client est s√©lectionn√©
+			//Si un client est sÈlectionnÈ
 			else if (dragType == 0 || dragType == 1) getSimu().getSelectedClient().getPos()[dragType].set(x,y);
-			//Si une voiture est s√©lectionn√©e
+			//Si une voiture est sÈlectionnÈe
 			else if (dragType == 2) getSimu().getSelectedCar().getPos().set(x,y);
 		}
-		//Si on est √† l'ext√©rieur du cityBoard, on supprime la s√©lection
+		//Si on est ‡ l'extÈrieur du cityBoard, on supprime la sÈlection
 		else {
 			if(dragType == 0 || dragType == 1) getSimu().deleteClient();
 			else if(dragType == 2) getSimu().deleteCar();
@@ -257,12 +257,12 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 		refresh();
 	}
 	
-	//Pour les autres √©v√©nements de souris, on ne fait rien
+	//Pour les autres ÈvÈnements de souris, on ne fait rien
 	public void mouseEntered(MouseEvent event){}
 	public void mouseExited(MouseEvent event){}
 	public void mouseClicked(MouseEvent arg0) {}
 
-	//Renvoie le client le plus r√©cent aux coordonn√©es (i,j)
+	//Renvoie le client le plus rÈcent aux coordonnÈes (i,j)
 	Client selectClient(int i, int j){
 		if(getSimu().getNotTargettedYet() != null
 				&& getSimu().getNotTargettedYet().getPos()[0].getX()/window.getBoard().getSquareSize() == i
@@ -280,7 +280,7 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 		return null;
 	}
 	
-	//Renvoie la voiture la plus r√©cente aux coordonn√©es (i,j)
+	//Renvoie la voiture la plus rÈcente aux coordonnÈes (i,j)
 	Car selectCar(int i, int j){
 		for(int k = getSimu().getCarList().size()-1;k>=0; k--)
 			if(getSimu().getCarList().get(k).getPos().getX()/window.getBoard().getSquareSize() == i
@@ -293,7 +293,7 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 	
 	
 	/** EVENEMENTS BOUTONS, TIMER, LISTE, SLIDER ET CLAVIER **/
-	//Actions au clic des boutons et aux √©ch√©ances du timer
+	//Actions au clic des boutons et aux ÈchÈances du timer
 	public void actionPerformed(ActionEvent evt)
 	{
 		if(evt.getSource() == window.getQuitButton())
@@ -318,21 +318,21 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 			timerEvent();
 	}
 
-	//Actions lorsque la case d'ajout de clients est coch√©e ou d√©coch√©e
+	//Actions lorsque la case d'ajout de clients est cochÈe ou dÈcochÈe
 	void addClientEvent(boolean isChecked){
 		window.getAddClientSpinner().setEnabled(isChecked);
 		window.getIntervalSpinner().setEnabled(isChecked);
 		window.getProbabilitySlider().setEnabled(isChecked);
 	}
 	
-	//Actions lorsqu'un √©l√©ment de la liste des simulations enregistr√©es est s√©lectionn√©
+	//Actions lorsqu'un ÈlÈment de la liste des simulations enregistr√©es est s√©lectionn√©
 	public void itemStateChanged(ItemEvent arg0)
 	{
 		if(arg0.getStateChange() == ItemEvent.SELECTED)
 		{
-			//On met √† jour le bouton "afficher"
+			//On met ‡ jour le bouton "afficher"
 			setDisplaySavedSimuButton();
-			//On met √† jour le bouton "supprimer"
+			//On met ‡ jour le bouton "supprimer"
 			setDeleteSavedSimuButton();
 			if(window.getDisplaySavedSimuButton().isEnabled()) displaySavedSimu();
 		}
@@ -340,20 +340,20 @@ public class Application implements ActionListener, MouseListener, ItemListener,
 
 	public void stateChanged(ChangeEvent arg0)
 	{
-		//Actions lorsque le curseur du slideur a boug√©
+		//Actions lorsque le curseur du slideur a bougÈ
 		//si le timer est en route, on le modifie sinon on ne fait rien
 		if(arg0.getSource() == window.getSpeedSlider() && timer.isRunning()){
 			timer.stop();
 			timerStart();
 		}
-		//Actions lorsque la taille des blocks est modifi√©e
+		//Actions lorsque la taille des blocks est modifiÈe
 		else if(arg0.getSource() == window.getBlockSizeSpinner()){
 			setBlockSize((Integer) window.getBlockSizeSpinner().getValue());
 			clear();
 		}
 	}
 
-	//Actions aux √©v√©nements claviers
+	//Actions aux ÈvÈnements claviers
 	public boolean dispatchKeyEvent(KeyEvent arg0) {
 		if (arg0.getID() == KeyEvent.KEY_PRESSED)
 			if(arg0.getKeyCode() == KeyEvent.VK_F1){window.getStartButton().doClick();}
