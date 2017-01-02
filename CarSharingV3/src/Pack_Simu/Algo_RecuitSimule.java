@@ -13,62 +13,134 @@ public class Algo_RecuitSimule implements I_Algorithme{
 	int costMin;
 	int [][] matriceDePassage;
 	Simulation simu;
-	{
+	
+	private void init (int etape, double temperature) {
 		/* on a deux compteurs qui évoluent au cours du temps et qui
 		 * peuvent servir de condition d'arrêt du while :
 		 * le numero de l'étape en cours et une "température"
 		 */
+		etape = 0;
+		temperature = 1000;
+	}
+	
+	private int[][] copieMatrice() {
+		//Copie de la matrice courante
+		return simu.copyMatrix(matriceDePassage);
+	}
+	
+	private int clientRandom() {
+		//on choisit un client au hasard
+		return (int)Math.floor(clientAlgoNumber *Math.random());
+	}
+	
+	private int getVoitureClient(int[][] copy, int clientRandom) {
+		//on trouve quelle est la voiture qui le transporte
+		int car = 0;
+		for(int k=0; k<carAlgoNumber; k++){
+			if(copy[k][2*clientRandom+1]!=-1){
+				car=k;
+			}
+		}
+		return car;
+	}
+	
+	public void retirerClientDeLaMatrice (int[][] copy, int pos, int target, int clientRandom, int car) {
+		// on retire le client de la matrice de passage
+		pos = copy[car][2*clientRandom];
+		target = copy[car][2*clientRandom+1];
+		copy[car][2*clientRandom]=-1;
+		copy[car][2*clientRandom+1]=-1;
+	}
+	
+	public void decalerOrdrePassageVoiturePourComblerLesTrous (int[][] copy, int car, int target, int pos) {
+	// il faut décaler les ordres de passage de la voiture pour combler les trous
+		for (int q=0; q<2*clientAlgoNumber; q++){
+			if(copy[car][q]>target){
+				copy[car][q]=copy[car][q]-2;
+			}
+			else{
+				if(copy[car][q]>pos){
+					copy[car][q]=copy[car][q]-1;
+				}
+			}
+		}
+	}
+	
+	private int quelleCar() {
+		// on choisit au hasard la voiture qui va le transporter
+		return (int)Math.floor(Math.random()*carAlgoNumber);
+	}
+	
+	private int coutDeCopy(int[][] copy) {
+		return simu.cost(copy,carAlgoList,clientAlgoList);
+	}
+	
+	public void testComparatifDeCout(int coutDeCopy, int[][] copy, double temperature) {
+		if (coutDeCopy<=costMin){
+			matriceDePassage=copy;
+			costMin=coutDeCopy;
+		}
+		else{
+			int diffDeCout = coutDeCopy-costMin;
+			double r = Math.random();
+			if (r<Math.exp(-((double)diffDeCout/temperature))){
+				matriceDePassage=copy;
+				costMin=coutDeCopy;
+			}
+		}
+	}
+	
+	private void incrementeCompteur(int etape, double temperature) {
+		// pour finir on incrémente les compteurs
+		etape=etape+1;
+		temperature=0.99*temperature;
+	} 
+	
+	{
 		int etape = 0;
-		double temperature = 1000;
+		double temperature = 0;
+		init(etape,temperature);
+		
 		// DEBUT DES ITERATIONS
 		while (etape < simu.getStepMax() ){
+			
 			/* on commence par créer une copie de la matrice de passage,
 			 * sur laquelle on va effectuer des modifications aléatoires,
 			 * Ã  caractère élémentaire,
 			 * pour ensuite la comparer avec la matrice courante
 			 */
-			int[][] copy = simu.copyMatrix(matriceDePassage);
-			//on choisit un client au hasard
-			int clientRandom = (int)Math.floor(clientAlgoNumber *Math.random());
-			//on trouve quelle est la voiture qui le transporte
-			int car = 0;
-			for(int k=0; k<carAlgoNumber; k++){
-				if(copy[k][2*clientRandom+1]!=-1){
-					car=k;
-				}
-			}
+			
+			int[][] copy = copieMatrice();
+			int clientRandom = clientRandom();
+			int car = getVoitureClient(copy,clientRandom);
+			
 			/* 2 cas dans l'état actuel des choses :
 			 * soit le client est toujours sur le trottoir,
 			 * soit il est dans une voiture
 			 */
+			
 			if (clientRandom < clientWaitingNumber) {
 				/* si le client est toujours sur le trottoir,
 				 * l'idée est de le sortir de la matrice
 				 * et de le réinjecter dedans à un endroit aléatoire
 				 * mais néanmoins compatible avec occupantMax
 				 */
-				// on le retire de la matrice de passage
-				int pos = copy[car][2*clientRandom];
-				int target = copy[car][2*clientRandom+1];
-				copy[car][2*clientRandom]=-1;
-				copy[car][2*clientRandom+1]=-1;
-				// il faut décaler les ordres de passage de la voiture pour combler les trous
-				for (int q=0; q<2*clientAlgoNumber; q++){
-					if(copy[car][q]>target){
-						copy[car][q]=copy[car][q]-2;
-					}
-					else{
-						if(copy[car][q]>pos){
-							copy[car][q]=copy[car][q]-1;
-						}
-					}
-				}
+				
+				int pos = 0;
+				int target = 0;
+				
+				retirerClientDeLaMatrice(copy, pos, target, clientRandom, car);
+				
+				decalerOrdrePassageVoiturePourComblerLesTrous(copy, car, target, pos);
+				
 				// Ã  présent on réinjecte le client
-				// on choisit au hasard la voiture qui va le transporter
-				int quelleCar = (int)Math.floor(Math.random()*carAlgoNumber);
+
+				int quelleCar = quelleCar();
+				
 				/* on détermine p le nombre d'entiers positifs sur la ligne,
 				 * ils vont de 0 à p-1
 				 */
+				
 				int m = simu.nombreDeMoinsUn(copy[quelleCar]);
 				int p = 2*clientAlgoNumber-m;
 				/* on choisit un ordre de passage aléatoire pour
@@ -196,27 +268,18 @@ public class Algo_RecuitSimule implements I_Algorithme{
 				}
 				copy[car][2*clientRandom+1]=randTarget;
 			}
-			int coutDeCopy = simu.cost(copy,carAlgoList,clientAlgoList);
+			
+			int coutDeCopy = coutDeCopy(copy);
+			
 			/* à présent vient le test comparatif de coût :
 			 * si le nouveau coût est plus faible, on accepte la solution ;
 			 * sinon on l'accepte avec une probabilité de
 			 * exp(-(le module de la différence des coûts)/la température)
 			 */
-			if (coutDeCopy<=costMin){
-				matriceDePassage=copy;
-				costMin=coutDeCopy;
-			}
-			else{
-				int diffDeCout = coutDeCopy-costMin;
-				double r = Math.random();
-				if (r<Math.exp(-((double)diffDeCout/temperature))){
-					matriceDePassage=copy;
-					costMin=coutDeCopy;
-				}
-			}
-			// pour finir on incrémente les compteurs
-			etape=etape+1;
-			temperature=0.99*temperature;
+			
+			testComparatifDeCout(coutDeCopy, copy, temperature);
+			
+			incrementeCompteur(etape, temperature);
 		}
-	} 
+	}
 }
